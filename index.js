@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs-extra')
 const bodyParser = require('body-parser')
 
 const app = module.exports = express()
