@@ -1,3 +1,3 @@
-const SnekGameLogic = require('../includes/game.js')
+const Snek = require('../includes/game.js')
 
-exports.default = SnekGameLogic
+module.exports = Snek

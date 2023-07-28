@@ -1,6 +1,6 @@
 const Button = require('./button')
 
-class SnekGameLogic {
+class Snek {
 
   constructor({gameFont, gameElement}) {
 
@@ -418,4 +418,4 @@ class SnekGameLogic {
   }
 }
 
-module.exports = SnekGameLogic
+module.exports = Snek

@@ -1,3 +1,3 @@
-import SnekGameLogic from '../includes/game.js'
+import Snek from '../includes/game.js'
 
-export default SnekGameLogic
+export default Snek
