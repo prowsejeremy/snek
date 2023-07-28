@@ -4,6 +4,8 @@ class SnakeGameJS {
 
   constructor({gameFont, gameElement}) {
 
+    if (!gameElement) throw console.error("Uh Oh, please provide a gameElement (html element) to render to.");
+
     // Game Variables
     this.runTime = false
     this.changeInitiated = false

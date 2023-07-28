@@ -2,11 +2,16 @@
 
 A simple yet addictive JS redition of the classic snake game.
 
+## Demo
+
+Head on over to my website and enter the magic ***cough*** konami ***cough*** code...
+[https://jpd.nz](https://jpd.nz)
+
 ## Instalation
 
-Using npm:
+Using npm (or package manager of your choice):
 ~~~ terminal
-  npm i 
+  npm i https://github.com/prowsejeremy/snek
 ~~~
 
 ~~~js
