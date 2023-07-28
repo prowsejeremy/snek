@@ -1,6 +1,6 @@
 const Button = require('./includes/button')
 
-class SnakeGameJS {
+class Snek {
 
   constructor({gameFont, gameElement}) {
 
@@ -418,4 +418,4 @@ class SnakeGameJS {
   }
 }
 
-module.exports = SnakeGameJS
+module.exports = Snek
