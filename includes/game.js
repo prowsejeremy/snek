@@ -1,6 +1,6 @@
-const Button = require('./includes/button')
+const Button = require('./button')
 
-class Snek {
+class SnekGameLogic {
 
   constructor({gameFont, gameElement}) {
 
@@ -20,15 +20,15 @@ class Snek {
     this.gameElement = gameElement
     
     this.appleImage = {
-      object: require('./images/apple.svg').default,
+      object: require('../images/apple.svg').default,
       image: false
     }
     this.poisonImage = {
-      object: require('./images/poison.svg').default,
+      object: require('../images/poison.svg').default,
       image: false
     }
     this.bonusImage = {
-      object: require('./images/star.svg').default,
+      object: require('../images/star.svg').default,
       image: false
     }
 
@@ -418,4 +418,4 @@ class Snek {
   }
 }
 
-module.exports = Snek
+module.exports = SnekGameLogic
