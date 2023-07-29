@@ -1,4 +1,4 @@
-const Button = require('./button')
+const Button = require('./button.js')
 
 class Snek {
 
@@ -63,8 +63,9 @@ class Snek {
     this.canvas.addEventListener('touchend', (e) => {this.handleTouchEnd(e)})
     
     this.canvas.addEventListener('click', (event) => {
-      let x = event.pageX - (this.canvas.clientLeft + this.canvas.offsetLeft);
-      let y = event.pageY - (this.canvas.clientTop + this.canvas.offsetTop);
+      const canvasRect = this.canvas.getBoundingClientRect();
+      let x = event.clientX - canvasRect.left;
+      let y = event.clientY - canvasRect.top;
 
       if (!this.gameEnabled && this.playAgainButton.inBounds(x, y) && !!this.playAgainButton.onClick) this.playAgainButton.onClick()
     })

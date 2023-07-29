@@ -4,9 +4,7 @@
   "description": "A simple yet addictive JS redition of the classic snake game.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {
-    "start": "node index.js"
-  },
+  "scripts": {},
   "author": "Jeremy Prowse",
   "license": "ISC",
   "dependencies": {}
