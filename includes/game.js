@@ -11,11 +11,11 @@ class Snek {
     this.changeInitiated = false
     
     // Play area
-    this.gridSize = 18
-    this.tileCount = 18
+    this.gridSize = 20
+    this.tileCount = 20
     this.canvas = document.createElement('canvas')
-    this.canvas.width = 300
-    this.canvas.height = 300
+    this.canvas.width = 400
+    this.canvas.height = 400
     this.canvas.tabIndex = 1
     this.gameElement = gameElement
     
@@ -41,15 +41,15 @@ class Snek {
     this.fontColor = '#FFFFFF'
     this.margin = 15
 
-    this.scoreText = 'SCORE -'
-    this.scoreFontSize = 20
-    this.scoreFont = `${this.scoreFontSize}px ${this.font}`
+    this.scoreText = 'SCORE'
+    this.scoreFontSize = 25
+    this.scoreFont = `600 ${this.scoreFontSize}px ${this.font}`
     
     this.gameOverBackgroundColor = '#FFFFFF'
     this.gameOverFontColor = '#000000'
     this.gameOverText = 'GAME OVER'
-    this.gameOverFontSize = 40;
-    this.gameOverFont = `${this.gameOverFontSize}px ${this.font}`;
+    this.gameOverFontSize = 50;
+    this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`;
     this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, 'red', 'black')
     this.playAgainButton.onClick = () => this.reset()
   }
@@ -359,8 +359,8 @@ class Snek {
     this.context.fillStyle = this.gameOverFontColor
     this.printCenteredText(`${this.scoreText} ${this.score}`, this.scoreFont);
     
-    this.playAgainButton.setPosition(this.canvas.width / 3.4, this.canvas.height / 1.75)
-    this.playAgainButton.setSize(130, 40)
+    this.playAgainButton.setSize(180, 80)
+    this.playAgainButton.setPosition((this.canvas.width / 2) - 90, (this.canvas.height / 2) + 20)
     this.playAgainButton.draw(this.context)
     // this.printCenteredText(this.GAME_OVER_PRESS_SPACE_TEXT, this.GAME_OVER_FONT, -this.GAME_OVER_MARGIN_BETWEEN_LINES);
   }
