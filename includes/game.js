@@ -14,8 +14,8 @@ class Snek {
     this.gridSize = 18
     this.tileCount = 18
     this.canvas = document.createElement('canvas')
-    this.canvas.width = 320
-    this.canvas.height = 320
+    this.canvas.width = 300
+    this.canvas.height = 300
     this.canvas.tabIndex = 1
     this.gameElement = gameElement
     
