@@ -4,7 +4,7 @@ class Snek {
 
   constructor({gameFont, gameElement}) {
 
-    if (!gameElement) throw console.error("Uh Oh, please provide a gameElement (html element) to render to.");
+    if (!gameElement) throw console.error("Uh Oh, please provide a gameElement (html element) to render to.")
 
     // Game Variables
     this.runTime = false
@@ -48,8 +48,8 @@ class Snek {
     this.gameOverBackgroundColor = '#FFFFFF'
     this.gameOverFontColor = '#000000'
     this.gameOverText = 'GAME OVER'
-    this.gameOverFontSize = 50;
-    this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`;
+    this.gameOverFontSize = 50
+    this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`
     this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, 'red', 'black')
     this.playAgainButton.onClick = () => this.reset()
   }
@@ -63,11 +63,14 @@ class Snek {
     this.canvas.addEventListener('touchend', (e) => {this.handleTouchEnd(e)})
     
     this.canvas.addEventListener('click', (event) => {
-      const canvasRect = this.canvas.getBoundingClientRect();
-      let x = event.clientX - canvasRect.left;
-      let y = event.clientY - canvasRect.top;
+      const canvasRect = this.canvas.getBoundingClientRect()
+      const realCanvasWidth = canvasRect.width
+      const x = event.clientX - canvasRect.left
+      const y = event.clientY - canvasRect.top
+      
+      const scaledPercentage = (realCanvasWidth - this.canvas.width) / this.canvas.width
 
-      if (!this.gameEnabled && this.playAgainButton.inBounds(x, y) && !!this.playAgainButton.onClick) this.playAgainButton.onClick()
+      if (!this.gameEnabled && this.playAgainButton.inBounds(scaledPercentage, x, y) && !!this.playAgainButton.onClick) this.playAgainButton.onClick()
     })
 
     // Load image assets
@@ -89,8 +92,8 @@ class Snek {
   }
 
   destroy() {
-    clearInterval(this.runTime);
-    this.gameElement.removeChild(this.canvas);
+    clearInterval(this.runTime)
+    this.gameElement.removeChild(this.canvas)
   }
 
   updateScore(value = 5) {
@@ -141,7 +144,7 @@ class Snek {
     this.snakeX += this.velocityX
     this.snakeY += this.velocityY
   
-    this.canvas.style = 'outline: none;'
+    this.canvas.style = 'outline: none'
   
     if(this.snakeX < 0) {
       this.snakeX = this.tileCount-1
@@ -328,20 +331,20 @@ class Snek {
   // //////////////////////////
 
   print(text, x, y) {
-    this.context.fillText(text, x, y);
+    this.context.fillText(text, x, y)
   }
 
   printCenteredText(text, font, yOffset = 0) {
-    this.context.font = font;
-    this.context.textAlign = 'center';
+    this.context.font = font
+    this.context.textAlign = 'center'
     
-    this.print(text, this.canvas.width / 2, this.canvas.height / 2 - yOffset);
+    this.print(text, this.canvas.width / 2, this.canvas.height / 2 - yOffset)
   }
 
   printScore() {
-    this.context.fillStyle = this.fontColor;
-    this.context.font = this.scoreFont;
-    this.context.textAlign = 'left';
+    this.context.fillStyle = this.fontColor
+    this.context.font = this.scoreFont
+    this.context.textAlign = 'left'
     
     this.print(`${this.scoreText} ${this.score}`, this.margin, this.canvas.height - this.margin)
   }
@@ -353,16 +356,16 @@ class Snek {
 
     // Draw 'Game Over'
     this.context.fillStyle = this.gameOverFontColor
-    this.printCenteredText(this.gameOverText, this.gameOverFont, 30);
+    this.printCenteredText(this.gameOverText, this.gameOverFont, 30)
 
     // Draw 'Score:'
     this.context.fillStyle = this.gameOverFontColor
-    this.printCenteredText(`${this.scoreText} ${this.score}`, this.scoreFont);
+    this.printCenteredText(`${this.scoreText} ${this.score}`, this.scoreFont)
     
     this.playAgainButton.setSize(180, 80)
     this.playAgainButton.setPosition((this.canvas.width / 2) - 90, (this.canvas.height / 2) + 20)
     this.playAgainButton.draw(this.context)
-    // this.printCenteredText(this.GAME_OVER_PRESS_SPACE_TEXT, this.GAME_OVER_FONT, -this.GAME_OVER_MARGIN_BETWEEN_LINES);
+    // this.printCenteredText(this.GAME_OVER_PRESS_SPACE_TEXT, this.GAME_OVER_FONT, -this.GAME_OVER_MARGIN_BETWEEN_LINES)
   }
   
 
