@@ -1,6 +1,6 @@
 {
   "name": "snek",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple yet addictive JS redition of the classic snake game.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
