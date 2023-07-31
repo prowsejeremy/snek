@@ -62,7 +62,7 @@ class Snek {
     this.canvas.addEventListener('touchstart', (e) => {this.handleTouchStart(e)})
     this.canvas.addEventListener('touchend', (e) => {this.handleTouchEnd(e)})
     
-    this.canvas.addEventListener('click', (event) => {
+    this.canvas.addEventListener('pointerdown', (event) => {
       const canvasRect = this.canvas.getBoundingClientRect()
       const realCanvasWidth = canvasRect.width
       const x = event.clientX - canvasRect.left
