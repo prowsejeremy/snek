@@ -1,4 +1,5 @@
 const Button = require('./button.js')
+const EventEmitter = require('./eventemitter')
 
 class Snek {
 
@@ -52,6 +53,9 @@ class Snek {
     this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`
     this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, 'red', 'black')
     this.playAgainButton.onClick = () => this.reset()
+
+    // custom event emitter
+    this._e = new EventEmitter()
   }
 
   init() {
@@ -91,6 +95,12 @@ class Snek {
     this.reset()
   }
 
+  on(event, handler) {
+    this._e.on(event, handler)
+
+    return this
+  }
+
   destroy() {
     clearInterval(this.runTime)
     this.gameElement.removeChild(this.canvas)
@@ -101,6 +111,8 @@ class Snek {
   }
   
   gameOver() {
+    this._e.emit('end', this.score)
+
     this.gameStart = false
     this.gameEnabled = false
     clearInterval(this.runTime)
@@ -111,6 +123,8 @@ class Snek {
   }
   
   reset() {
+    this._e.emit('reset')
+
     this.gameStart = false
     this.gameEnabled = true
     this.score = 0
@@ -134,7 +148,6 @@ class Snek {
   }
   
   game() {
-  
     // Fill game canvas
     this.context.fillStyle = '#161414'
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
@@ -288,33 +301,30 @@ class Snek {
   
   handleDirChange(dir) {
     if (!this.gameEnabled || this.changeInitiated) return false
-  
+    if (!this.gameStart) this.gameStart = true
+    
     setTimeout(() => { this.changeInitiated = false }, 60)
   
     switch (dir) {
       case 'left':
-        this.gameStart = true
         if (this.velocityX === 0) {
           this.velocityX = -1
           this.velocityY = 0
         }
         break
       case 'up':
-        this.gameStart = true
         if (this.velocityY === 0) {
           this.velocityX = 0
           this.velocityY = -1
         }
         break
       case 'right':
-        this.gameStart = true
         if (this.velocityX === 0) {
           this.velocityX = 1
           this.velocityY = 0
         }
         break
       case 'down':
-        this.gameStart = true
         if (this.velocityY === 0) {
           this.velocityX = 0
           this.velocityY = 1
