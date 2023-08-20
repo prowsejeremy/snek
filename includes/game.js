@@ -3,13 +3,11 @@ import Snake from './snake.js'
 import Button from './button.js'
 import EventEmitter from './eventemitter.js'
 
-const defaultFont = new FontFace("Teko", "url(./fonts/teko-semi-bold.ttf)");
-
 class Snek {
 
-  constructor({gameFont, gameElement}) {
+  constructor({gameElement, gameFont}) {
 
-    if (!gameElement) throw console.error("Uh Oh, please provide a gameElement (html element) to render to.")
+    if (!gameElement) throw console.error('Uh Oh, please provide a gameElement (html element) to render to.')
 
     // Game Variables
     this.runTime = false
@@ -30,26 +28,49 @@ class Snek {
     this.touchEndPos = {x:0,y:0}
 
     // Messages
-    this.font = gameFont || 'Teko'
-    this.fontColor = '#FFFFFF'
+    this.font = gameFont?.family || 'Impact'
+    this.fontSize = gameFont?.size || 25
+    this.fontWeight = gameFont?.weight || 'normal'
+    this.fontColor = gameFont?.color || '#FFFFFF'
     this.margin = 15
 
     this.scoreText = 'SCORE'
-    this.scoreFontSize = 25
-    this.scoreFont = `600 ${this.scoreFontSize}px ${this.font}`
+    this.scoreFontSize = this.fontSize * 0.9
+    this.scoreFont = `${this.fontWeight} ${this.scoreFontSize}px ${this.font}`
 
     this.gameOverBackgroundColor = '#150303'
-    this.gameOverFontColor = '#FFFFFF'
+    this.gameOverFontColor = this.fontColor
     this.gameOverText = 'GAME OVER'
-    this.gameOverFontSize = 50
-    this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`
-    this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, '#D21A1A', '#FFFFFF')
+    this.gameOverFontSize = this.fontSize * 2
+    this.gameOverFont = `${this.fontWeight} ${this.gameOverFontSize}px ${this.font}`
+    this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, '#D21A1A', '#000000')
     this.playAgainButton.onClick = () => this.reset()
 
     // Items
-    this.apple = new Item(this.gridSize, {imagePath: './images/apple.png', color: '#00FF00'})
-    this.poison = new Item(this.gridSize, {imagePath: './images/poison.png', color: '#FF0000'})
-    this.bonus = new Item(this.gridSize, {imagePath: './images/bonus.png', color: '#FFFF00'})
+    this.apple = new Item(
+      this.canvas,
+      this.gridSize,
+      {
+        imageObj: require('../images/apple.svg').default,
+        color: '#00FF00'
+      }
+    )
+    this.poison = new Item(
+      this.canvas,
+      this.gridSize,
+      {
+        imageObj: require('../images/poison.svg').default,
+        color: '#FF0000'
+      }
+    )
+    this.bonus = new Item(
+      this.canvas,
+      this.gridSize,
+      {
+        imageObj: require('../images/bonus.svg').default,
+        color: '#FFFF00'
+      }
+    )
 
     // Snake
     this.snake = new Snake(this.gridSize, () => {this.gameOver()})
@@ -78,10 +99,7 @@ class Snek {
       if (!this.gameEnabled && this.playAgainButton.inBounds(scaledPercentage, x, y) && !!this.playAgainButton.onClick) this.playAgainButton.onClick()
     })
 
-    defaultFont.load().then((font) => {
-      document.fonts.add(font);
-      this.reset()
-    })
+    this.reset()
   }
 
   on(event, handler) {

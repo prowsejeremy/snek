@@ -4,7 +4,7 @@ class Button {
     this.text = text
     this.fillColor = fillColor
     this.textColor = textColor
-    this.font = font || '18px Arial'
+    this.font = font || '16px Impact'
   }
 
   setPosition(x, y) {

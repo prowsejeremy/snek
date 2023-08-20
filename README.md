@@ -18,9 +18,14 @@ Using npm (or package manager of your choice):
 import Snek from 'snek'
 
 const snek = new Snek(
-  {
-    font: 'fontfamily', // Optional
+  { 
     gameElement: document.querySelector('#game'), // Must provide a gameElement
+    gameFont: { // Optional along with all props
+      family: 'fontfamily',
+      weight: 600,
+      size: 30,
+      color: '#FFFFFF'
+    }
   }
 )
 

@@ -1,5 +1,6 @@
 class Item {
-  constructor(gridSize, elementProps) {
+  constructor(canvas, gridSize, elementProps) {
+    this.gameCanvas = canvas
     this.gameGridSize = gridSize
 
     this.element = {
@@ -7,8 +8,8 @@ class Item {
       image: new Image()
     }
 
-    if (elementProps.imagePath && !this.element.image.src) {
-      this.element.image.src = elementProps.imagePath
+    if (elementProps.imageObj && !this.element.image.src) {
+      this.element.image.src = elementProps.imageObj.src
     }
 
     this.pos = {
@@ -46,9 +47,8 @@ class Item {
     for (let index = 0; index < snake.trail.length; index++) {
       const trailItem = snake.trail[index]
       if (
-        newItem.x === trailItem.x &&
-        newItem.y === trailItem.y
-        // || set location of score so item is never placed over score.
+        (newItem.x === trailItem.x && newItem.y === trailItem.y) ||
+        (newItem.x < 7 && newItem.y > 17)
       ) {
         this.generateNewItem(snake)
         return false
@@ -59,6 +59,7 @@ class Item {
   }
 
  draw(context, gridSize) {
+
    if (this.pos.x !== false && this.pos.y !== false) {
      if (this.element.image.src) {
       this.element.image.onload = () => {
