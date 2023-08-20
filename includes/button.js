@@ -47,8 +47,8 @@ class Button {
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.font = this.font
-    context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2, this.width)
+    context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 1.8, this.width)
   }
 }
 
-module.exports = Button
+export default Button

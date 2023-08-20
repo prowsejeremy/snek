@@ -1,3 +1,3 @@
-const Snek = require('../includes/game.js')
+import Snek from '../includes/game.js'
 
-module.exports = Snek
+export default Snek

@@ -1,5 +1,9 @@
-const Button = require('./button.js')
-const EventEmitter = require('./eventemitter')
+import Item from './item.js'
+import Snake from './snake.js'
+import Button from './button.js'
+import EventEmitter from './eventemitter.js'
+
+const defaultFont = new FontFace("Teko", "url(./fonts/teko-semi-bold.ttf)");
 
 class Snek {
 
@@ -10,55 +14,52 @@ class Snek {
     // Game Variables
     this.runTime = false
     this.changeInitiated = false
+    this.framerate = 1000/10
+    this.bufferedInput = false
     
     // Play area
     this.gridSize = 20
-    this.tileCount = 20
     this.canvas = document.createElement('canvas')
     this.canvas.width = 400
     this.canvas.height = 400
     this.canvas.tabIndex = 1
     this.gameElement = gameElement
-    
-    this.appleImage = {
-      object: require('../images/apple.svg').default,
-      image: false
-    }
-    this.poisonImage = {
-      object: require('../images/poison.svg').default,
-      image: false
-    }
-    this.bonusImage = {
-      object: require('../images/star.svg').default,
-      image: false
-    }
 
     // Controls
     this.touchStartPos = {x:0,y:0}
     this.touchEndPos = {x:0,y:0}
 
     // Messages
-    this.font = gameFont || 'Arial'
+    this.font = gameFont || 'Teko'
     this.fontColor = '#FFFFFF'
     this.margin = 15
 
     this.scoreText = 'SCORE'
     this.scoreFontSize = 25
     this.scoreFont = `600 ${this.scoreFontSize}px ${this.font}`
-    
-    this.gameOverBackgroundColor = '#FFFFFF'
-    this.gameOverFontColor = '#000000'
+
+    this.gameOverBackgroundColor = '#150303'
+    this.gameOverFontColor = '#FFFFFF'
     this.gameOverText = 'GAME OVER'
     this.gameOverFontSize = 50
     this.gameOverFont = `600 ${this.gameOverFontSize}px ${this.font}`
-    this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, 'red', 'black')
+    this.playAgainButton = new Button('PLAY AGAIN', this.scoreFont, '#D21A1A', '#FFFFFF')
     this.playAgainButton.onClick = () => this.reset()
+
+    // Items
+    this.apple = new Item(this.gridSize, {imagePath: './images/apple.png', color: '#00FF00'})
+    this.poison = new Item(this.gridSize, {imagePath: './images/poison.png', color: '#FF0000'})
+    this.bonus = new Item(this.gridSize, {imagePath: './images/bonus.png', color: '#FFFF00'})
+
+    // Snake
+    this.snake = new Snake(this.gridSize, () => {this.gameOver()})
 
     // custom event emitter
     this._e = new EventEmitter()
   }
 
   init() {
+
     this.gameElement.appendChild(this.canvas)
     this.context = this.canvas.getContext('2d')
 
@@ -77,22 +78,10 @@ class Snek {
       if (!this.gameEnabled && this.playAgainButton.inBounds(scaledPercentage, x, y) && !!this.playAgainButton.onClick) this.playAgainButton.onClick()
     })
 
-    // Load image assets
-
-    if (!this.appleImage.image) {
-      this.appleImage.image = new Image()
-      this.appleImage.image.src = this.appleImage.object.src
-    }
-    if (!this.poisonImage.image) {
-      this.poisonImage.image = new Image()
-      this.poisonImage.image.src = this.poisonImage.object.src
-    }
-    if (!this.bonusImage.image) {
-      this.bonusImage.image = new Image()
-      this.bonusImage.image.src = this.bonusImage.object.src
-    }
-
-    this.reset()
+    defaultFont.load().then((font) => {
+      document.fonts.add(font);
+      this.reset()
+    })
   }
 
   on(event, handler) {
@@ -108,6 +97,12 @@ class Snek {
 
   updateScore(value = 5) {
     this.score+=value
+  }
+
+  startGame() {
+    this._e.emit('start')
+    this.gameStart = true
+    this.runTime = setInterval(() => {this.draw()}, this.framerate)
   }
   
   gameOver() {
@@ -128,206 +123,111 @@ class Snek {
     this.gameStart = false
     this.gameEnabled = true
     this.score = 0
-    // Snake
-    this.snakeX = 10
-    this.snakeY = 10
-    this.velocityX = 
-    this.velocityY = 0
-    this.trail = []
-    this.tailLength = 5
+
+    this.snake.reset()
 
     // Collectables
-    this.appleX = Math.floor(Math.random() * this.tileCount)
-    this.appleY = Math.floor(Math.random() * this.tileCount)
-    this.poisonX = false
-    this.poisonY = false
-    this.bonusX = false
-    this.bonusY = false
+    this.apple.generateNewItem(this.snake)
+    this.poison.destroy()
+    this.bonus.destroy()
 
-    this.runTime = setInterval(() => {this.game()}, 1000/10)
+    // Generate First Frame
+    this.draw()
   }
-  
-  game() {
+
+  draw() {
     // Fill game canvas
+    this.canvas.style = 'outline: none'
+
     this.context.fillStyle = '#161414'
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
     this.printScore()
-  
-    this.snakeX += this.velocityX
-    this.snakeY += this.velocityY
-  
-    this.canvas.style = 'outline: none'
-  
-    if(this.snakeX < 0) {
-      this.snakeX = this.tileCount-1
-    }
-    if (this.snakeX > this.tileCount-1) {
-      this.snakeX = 0
-    }
-    if(this.snakeY < 0) {
-      this.snakeY = this.tileCount-1
-    }
-    if (this.snakeY > this.tileCount-1) {
-      this.snakeY = 0
-    }
-    
-    // Snake
-    this.context.fillStyle = '#FFFFFF'
-    for (let index = 0; index < this.trail.length; index++) {
-      const trailItem = this.trail[index]
-      
-      this.context.fillRect(trailItem.x*this.gridSize, trailItem.y*this.gridSize, this.gridSize-2, this.gridSize-2)
-      
-      if (this.gameStart && this.snakeX === trailItem.x && this.snakeY === trailItem.y) {
-        this.gameOver()
-      }
-    }
-    
-    this.trail.push({ x:this.snakeX, y:this.snakeY })
-    while(this.trail.length > this.tailLength) {
-      this.trail.shift()
-    }
-    
-    // Apple
-    if (this.snakeX === this.appleX && this.snakeY === this.appleY) {
-      this.appleX = false
-      this.appleY = false
-      
-      this.tailLength++
-      this.updateScore(5)
-      this.generateNewItem('apple')
-      this.tailLength % 4 === 0 && this.poisonX === false && this.poisonY === false && this.generateNewItem('poison')
-      this.tailLength % 7 === 0 && this.poisonX === false && this.poisonY === false && this.bonusX === false && this.bonusY === false && this.generateNewItem('bonus')
-    }
-  
-    // Poison
-    if (this.snakeX === this.poisonX && this.snakeY === this.poisonY) {
-      this.poisonX = false
-      this.poisonY = false
-      this.updateScore(-3)
-    }
-  
-    // Bonus
-    if (this.snakeX === this.bonusX && this.snakeY === this.bonusY) {
-      this.bonusX = false
-      this.bonusY = false
-      this.updateScore(10)
-    }
-  
-    if (this.appleX !== false && this.appleY !== false) {
-      if (this.appleImage.image) {
-        this.context.drawImage(this.appleImage.image, this.appleX*this.gridSize, this.appleY*this.gridSize, this.gridSize-2, this.gridSize-2)
-      } else {
-        this.context.fillStyle = '#00FF00'
-        this.context.fillRect(this.appleX*this.gridSize, this.appleY*this.gridSize, this.gridSize-2, this.gridSize-2)
-      }
-    }
-  
-    if (this.poisonX !== false && this.poisonY !== false) {
-      setTimeout(() => {
-        this.poisonX = false
-        this.poisonY = false
-      }, 5000)
 
-      if (this.poisonImage.image) {
-        this.context.drawImage(this.poisonImage.image, this.poisonX*this.gridSize, this.poisonY*this.gridSize, this.gridSize-2, this.gridSize-2)
-      } else {
-        this.context.fillStyle = '#FF0000'
-        this.context.fillRect(this.poisonX*this.gridSize, this.poisonY*this.gridSize, this.gridSize-2, this.gridSize-2)
-      }
-    }
-  
-    if (this.bonusX !== false && this.bonusY !== false) {
-      setTimeout(() => {
-        this.bonusX = false
-        this.bonusY = false
-      }, 5000)
+    this.snake.draw(this.context)
+    this.apple.draw(this.context, this.gridSize)
+    this.poison.draw(this.context, this.gridSize)
+    this.bonus.draw(this.context, this.gridSize)
 
-      if (this.bonusImage.image) {
-        this.context.drawImage(this.bonusImage.image, this.bonusX*this.gridSize, this.bonusY*this.gridSize, this.gridSize-2, this.gridSize-2)
-      } else {
-        this.context.fillStyle = '#FFFF00'
-        this.context.fillRect(this.bonusX*this.gridSize, this.bonusY*this.gridSize, this.gridSize-2, this.gridSize-2)
+    if (this.snake.intersects(this.apple.pos)) {
+      this.apple.destroy()
+      
+      this.snake.tailLength++
+      this.updateScore(this.apple.value)
+      this.apple.generateNewItem(this.snake)
+
+      if (this.snake.tailLength % 4 === 0 && this.poison.pos.x === false) {
+        this.poison.generateNewItem(this.snake)
+        setTimeout(() => {
+          this.poison.destroy()
+        }, 5000)
+      }
+
+      if (this.snake.tailLength % 7 === 0 && this.bonus.pos.x === false) {
+        this.bonus.generateNewItem(this.snake)
+        setTimeout(() => {
+          this.bonus.destroy()
+        }, 5000)
       }
     }
-  }
-  
-  async generateNewItem(kind) {
-  
-    const newItem = await this.pickNewItem()
-    const passedInspection = await this.checkNewItem(newItem, kind)
-    
-    if (passedInspection) {
-      switch(kind) {
-        case 'apple':
-          this.appleX = newItem.x
-          this.appleY = newItem.y
-        break
-        case 'poison':
-          this.poisonX = newItem.x
-          this.poisonY = newItem.y
-        break
-        case 'bonus':
-          this.bonusX = newItem.x
-          this.bonusY = newItem.y
-        break
-      }
+
+    if (this.snake.intersects(this.poison.pos)) {
+      this.poison.destroy()
+      this.updateScore(this.poison.value)
     }
-  }
-  
-  pickNewItem() {
-    const newItem = {
-      x: Math.floor(Math.random() * this.tileCount),
-      y: Math.floor(Math.random() * this.tileCount)
+
+    if (this.snake.intersects(this.bonus.pos)) {
+      this.bonus.destroy()
+      this.updateScore(this.bonus.value)
     }
-    return newItem
+
   }
-  
-  checkNewItem(newItem, kind) {
-  
-    for (let index = 0; index < this.trail.length; index++) {
-      const trailItem = this.trail[index]
-      if ( newItem.x === trailItem.x && newItem.y === trailItem.y ) {
-        this.generateNewItem(kind)
-        return false
-      }
-    }
-  
-    return true
-  }
-  
-  // Handle controls
-  
+
+  // //////////////////////////
+  // Handle Direction Change
+  // //////////////////////////
+
   handleDirChange(dir) {
-    if (!this.gameEnabled || this.changeInitiated) return false
-    if (!this.gameStart) this.gameStart = true
+    if (!this.gameEnabled || this.changeInitiated) {
+      this.bufferedInput = dir
+      return false
+    }
+
+    if (!this.gameStart) {
+      this.startGame()
+    }
     
-    setTimeout(() => { this.changeInitiated = false }, 60)
+    setTimeout(() => {
+      this.changeInitiated = false
+      if (this.bufferedInput !== false) {
+        this.handleDirChange(this.bufferedInput)
+        this.bufferedInput = false
+      }
+    }, this.framerate)
   
     switch (dir) {
       case 'left':
-        if (this.velocityX === 0) {
-          this.velocityX = -1
-          this.velocityY = 0
+        if (this.snake.velocity.x === 0) {
+          this.snake.velocity.x = -1
+          this.snake.velocity.y = 0
         }
         break
       case 'up':
-        if (this.velocityY === 0) {
-          this.velocityX = 0
-          this.velocityY = -1
+        if (this.snake.velocity.y === 0) {
+          this.snake.velocity.x = 0
+          this.snake.velocity.y = -1
         }
         break
       case 'right':
-        if (this.velocityX === 0) {
-          this.velocityX = 1
-          this.velocityY = 0
+        if (this.snake.velocity.x === 0) {
+          this.snake.velocity.x = 1
+          this.snake.velocity.y = 0
         }
         break
       case 'down':
-        if (this.velocityY === 0) {
-          this.velocityX = 0
-          this.velocityY = 1
+        if (this.snake.velocity.y === 0) {
+          this.snake.velocity.x = 0
+          this.snake.velocity.y = 1
         }
         break
     }
@@ -372,10 +272,9 @@ class Snek {
     this.context.fillStyle = this.gameOverFontColor
     this.printCenteredText(`${this.scoreText} ${this.score}`, this.scoreFont)
     
-    this.playAgainButton.setSize(180, 80)
-    this.playAgainButton.setPosition((this.canvas.width / 2) - 90, (this.canvas.height / 2) + 20)
+    this.playAgainButton.setSize(160, 60)
+    this.playAgainButton.setPosition((this.canvas.width / 2) - 80, (this.canvas.height / 2) + 20)
     this.playAgainButton.draw(this.context)
-    // this.printCenteredText(this.GAME_OVER_PRESS_SPACE_TEXT, this.GAME_OVER_FONT, -this.GAME_OVER_MARGIN_BETWEEN_LINES)
   }
   
 
@@ -432,4 +331,4 @@ class Snek {
   }
 }
 
-module.exports = Snek
+export default Snek

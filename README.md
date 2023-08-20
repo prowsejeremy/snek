@@ -27,7 +27,20 @@ const snek = new Snek(
 // To start the game use the `init` function
 snek.init()
 
-//To stop the game processes run the `destroy` function
+// To listen to in game events
+snek.on('reset', () => {
+  console.log('re-re-re-reeeeset!')
+})
+
+snek.on('start', () => {
+  console.log('ready... fight!')
+})
+
+snek.on('end', () => {
+  console.log('gameover man, gameover!')
+})
+
+// To stop the game processes run the `destroy` function
 snek.destroy()
 
 ~~~
