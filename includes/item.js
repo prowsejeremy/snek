@@ -1,5 +1,5 @@
 class Item {
-  constructor(canvas, gridSize, elementProps) {
+  constructor({canvas, gridSize, elementProps, value}) {
     this.gameCanvas = canvas
     this.gameGridSize = gridSize
 
@@ -16,7 +16,7 @@ class Item {
       x: false,
       y: false
     }
-    this.value = 5
+    this.value = value || 5
   }
 
   destroy() {

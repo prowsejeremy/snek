@@ -47,30 +47,33 @@ class Snek {
     this.playAgainButton.onClick = () => this.reset()
 
     // Items
-    this.apple = new Item(
-      this.canvas,
-      this.gridSize,
-      {
+    this.apple = new Item({
+      canvas: this.canvas,
+      gridSize: this.gridSize,
+      value: 5,
+      elementProps: {
         imageObj: require('../images/apple.svg').default,
         color: '#00FF00'
       }
-    )
-    this.poison = new Item(
-      this.canvas,
-      this.gridSize,
-      {
+    })
+    this.poison = new Item({
+      canvas: this.canvas,
+      gridSize: this.gridSize,
+      value: -3,
+      elementProps: {
         imageObj: require('../images/poison.svg').default,
         color: '#FF0000'
       }
-    )
-    this.bonus = new Item(
-      this.canvas,
-      this.gridSize,
-      {
+    })
+    this.bonus = new Item({
+      canvas: this.canvas,
+      gridSize: this.gridSize,
+      value: 10,
+      elementProps:{
         imageObj: require('../images/bonus.svg').default,
         color: '#FFFF00'
       }
-    )
+    })
 
     // Snake
     this.snake = new Snake(this.gridSize, () => {this.gameOver()})
