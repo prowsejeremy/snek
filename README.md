@@ -1,6 +1,6 @@
 ## SNEK
 
-A simple yet addictive JS redition of the classic snake game.
+A simple yet addictive JS rendition of the classic snake game.
 
 ## Demo
 
@@ -10,6 +10,7 @@ Head on over to my website and enter the magic ***cough*** konami ***cough*** co
 ## Instalation
 
 Using npm (or package manager of your choice):
+
 ~~~ terminal
   npm i https://github.com/prowsejeremy/snek
 ~~~
@@ -19,7 +20,7 @@ import Snek from 'snek'
 
 const snek = new Snek(
   { 
-    gameElement: document.querySelector('#game'), // Must provide a gameElement
+    gameElement: document.querySelector('#game'), // Required. Must provide a gameElement
     gameFont: { // Optional along with all props
       family: 'fontfamily',
       weight: 600,
@@ -47,5 +48,4 @@ snek.on('end', () => {
 
 // To stop the game processes run the `destroy` function
 snek.destroy()
-
 ~~~

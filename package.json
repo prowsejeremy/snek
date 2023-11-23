@@ -1,11 +1,22 @@
 {
-  "name": "snek",
-  "version": "1.1.2",
+  "name": "@jpd.nz/snek",
+  "version": "1.1.3",
   "description": "A simple yet addictive JS redition of the classic snake game.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {},
-  "author": "Jeremy Prowse",
-  "license": "ISC",
-  "dependencies": {}
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prowsejeremy/snek.git"
+  },
+  "keywords": [
+    "snake game",
+    "javascript",
+    "js"
+  ],
+  "author": "Jeremy Prowse <jpd.nz> (https://jpd.nz)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prowsejeremy/snek/issues"
+  },
+  "homepage": "https://github.com/prowsejeremy/snek#readme"
 }
