@@ -1,5 +1,4 @@
-## SNEK
-
+# SNEK
 A simple yet addictive JS rendition of the classic snake game.
 
 ## Demo
@@ -7,16 +6,19 @@ A simple yet addictive JS rendition of the classic snake game.
 Head on over to my website and enter the magic ***cough*** konami ***cough*** code...
 [https://jpd.nz](https://jpd.nz)
 
+
 ## Instalation
 
 Using npm (or package manager of your choice):
 
 ~~~ terminal
-  npm i https://github.com/prowsejeremy/snek
+  npm i @jpd.nz/snek
 ~~~
 
+## Usage
+
 ~~~js
-import Snek from 'snek'
+import Snek from '@jpd.nz/snek'
 
 const snek = new Snek(
   { 
