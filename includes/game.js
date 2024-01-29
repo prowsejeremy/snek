@@ -18,7 +18,6 @@ class Snek {
     // Play area
     this.gridSize = 20
     this.canvas = document.createElement('canvas')
-    this.canvas.tabIndex = 1
     this.canvas.width = 400
     this.canvas.height = 400
     this.canvas.tabIndex = 1
